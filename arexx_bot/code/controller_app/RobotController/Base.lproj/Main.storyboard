@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RobotController" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="aV0-Ar-AUy">
+                                <rect key="frame" x="14" y="218" width="292" height="31"/>
+                                <connections>
+                                    <action selector="turn:" destination="BYZ-38-t0r" eventType="valueChanged" id="aTq-Tl-eIM"/>
+                                </connections>
+                            </slider>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bBy-Wg-VMT">
+                                <rect key="frame" x="16" y="138" width="34" height="30"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JMy-VK-jIU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wEe-WY-eyw">
+                                <rect key="frame" x="272" y="138" width="32" height="30"/>
+                                <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UOi-bE-mX8"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Left" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KQY-xh-0m9">
+                                <rect key="frame" x="16" y="256" width="30" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Right" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIb-ig-Brc">
+                                <rect key="frame" x="264" y="256" width="40" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="header" translatesAutoresizingMaskIntoConstraints="NO" id="uq6-A8-cX4">
+                                <rect key="frame" x="16" y="28" width="288" height="102"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="102" id="aGz-45-oqO"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="KQY-xh-0m9" secondAttribute="leading" id="2FH-H8-Wy8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="qIb-ig-Brc" secondAttribute="trailing" id="6tT-Ff-grm"/>
+                            <constraint firstItem="KQY-xh-0m9" firstAttribute="top" secondItem="aV0-Ar-AUy" secondAttribute="bottom" constant="8" symbolic="YES" id="7mx-3V-Clf"/>
+                            <constraint firstItem="qIb-ig-Brc" firstAttribute="centerY" secondItem="KQY-xh-0m9" secondAttribute="centerY" id="Hen-TJ-vcZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="uq6-A8-cX4" secondAttribute="trailing" id="Jnp-B1-6qN"/>
+                            <constraint firstItem="uq6-A8-cX4" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="KSG-Hg-MOY"/>
+                            <constraint firstItem="aV0-Ar-AUy" firstAttribute="top" secondItem="bBy-Wg-VMT" secondAttribute="bottom" constant="50" id="QTb-f2-yDR"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="uq6-A8-cX4" secondAttribute="leading" id="Xcn-8m-U26"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="wEe-WY-eyw" secondAttribute="trailing" id="Z46-fB-gmt"/>
+                            <constraint firstItem="wEe-WY-eyw" firstAttribute="centerY" secondItem="bBy-Wg-VMT" secondAttribute="centerY" id="gxW-xw-c1Z"/>
+                            <constraint firstItem="bBy-Wg-VMT" firstAttribute="top" secondItem="uq6-A8-cX4" secondAttribute="bottom" constant="8" symbolic="YES" id="hZd-Em-paq"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="aV0-Ar-AUy" secondAttribute="leading" id="hh1-U5-Xlk"/>
+                            <constraint firstItem="bBy-Wg-VMT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="pcW-2f-gcs"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aV0-Ar-AUy" secondAttribute="trailing" id="yFp-Ql-6Mw"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="24.375" y="21.12676056338028"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="header" width="1024" height="368"/>
+    </resources>
+</document>
