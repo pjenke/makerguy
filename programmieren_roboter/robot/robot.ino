@@ -1,50 +1,38 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-#include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
+extern "C" {
+  #include "user_interface.h"
+}
+#include "robot.h"
 
 // 192.168.2.112:1234/robot?forward=400 -> forward
 // 192.168.2.112:1234/robot?left=400 -> left
 // 192.168.2.112:1234/robot?right=400 -> right
 // 192.168.2.112:1234/robot?blink=1 -> Show blinkenlights
+// 192.168.2.112:1234/robot?command=BFLR -> B = Blink, F = Forward, L = Left, R = Right
 
 // WLAN settings
 char WiFiNetwork[] = "Jenke";
 char WiFiPassword[] = "holladi4";
+char wiFiHostname[] = "robot";
 
-// Motor settings
-#define HG7881_A_IA 16
-#define HG7881_A_IB 5
-#define HG7881_B_IA 4
-#define HG7881_B_IB 0
-#define MOTOR_B_PWM HG7881_B_IA // Motor B PWM Speed
-#define MOTOR_B_DIR HG7881_B_IB // Motor B Direction
-#define MOTOR_A_PWM HG7881_A_IA // Motor B PWM Speed
-#define MOTOR_A_DIR HG7881_A_IB // Motor B Direction
-
-// Neopixels
-#define PIN 2
-#define NUMPIXELS 16
+Robot robot;
 
 ESP8266WebServer server(1234);
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRBW);
 
 void setup()
 {
   Serial.begin( 9600 );
 
-  // Motor
-  pinMode( MOTOR_A_DIR, OUTPUT );
-  pinMode( MOTOR_A_PWM, OUTPUT );
-  pinMode( MOTOR_B_DIR, OUTPUT );
-  pinMode( MOTOR_B_PWM, OUTPUT );
-
   // Wifi
   WiFi.mode(WIFI_STA);
   // Attempt to conect to the WiFi network. 
   Serial.println("Connecting to WiFi network.");
+  wifi_station_set_hostname(wiFiHostname);
+  WiFi.hostname(wiFiHostname);
   while (WiFi.status() != WL_CONNECTED) {
     WiFi.begin(WiFiNetwork, WiFiPassword);              // Connect to WPA2 network
     uint8_t timeout = 10;                         // Set a timeout variable
@@ -61,21 +49,26 @@ void setup()
     String result = "error";
     if ( server.hasArg("forward")){
       int duration = server.arg("forward").toInt(); 
-      forward(duration);
+      robot.forward(duration);
       result = "Ok!"; 
     }
     if ( server.hasArg("left")){
       int duration = server.arg("left").toInt(); 
-      left(duration);
+      robot.left(duration);
       result = "Ok!"; 
     }
     if ( server.hasArg("right")){
       int duration = server.arg("right").toInt(); 
-      right(duration);
+      robot.right(duration);
       result = "Ok!"; 
     }
     if ( server.hasArg("blink")){
-      showBlinkenlightsFun();
+      robot.showBlinkenlightsFun();
+      result = "Ok!"; 
+    }
+    if ( server.hasArg("command")){
+      String commands = server.arg("command"); 
+      handleCommands(commands);
       result = "Ok!"; 
     }
     server.send(200, "text/plain", result);
@@ -83,15 +76,27 @@ void setup()
   server.onNotFound(handleNotFound);
   server.begin();
   Serial.println("HTTP server started");
-
-  // Neopixels
-  pixels.begin();
-  
 }
  
 void loop()
 { 
   server.handleClient();
+}
+
+void handleCommands(String commands){
+  for ( int i = 0; i < commands.length(); i++ ){
+    char command = commands.charAt(i);
+    if ( command == 'B' ){
+      robot.showBlinkenlightsFun();
+    } else if ( command == 'F' ){
+      robot.forward();
+    } else if ( command == 'L' ){
+      robot.left();
+    } else if ( command == 'R' ){
+      robot.right();
+    }
+    delay(500);
+  }
 }
 
 void handleRoot() {
@@ -112,101 +117,3 @@ void handleNotFound(){
   }
   server.send(404, "text/plain", message);
 }
-
-/**
- * Move the robot forward for a given duration in milliseconds
- */
-void forward(int duration)
-{
-  motorAForward();
-  motorBForward(); 
-  delay(duration);
-  motorAStop();
-  motorBStop();
-  delay(100);
-}
-
-/**
- * Rotate left for a given duration in milliseconds
- */
-void left(int duration)
-{
-  motorAForward();
-  motorBBackward(); 
-  delay(duration);
-  motorAStop();
-  motorBStop();
-  delay(100);
-}
-
-/**
- * Rotate right for a given duration in milliseconds
- */
-void right(int duration)
-{
-  motorABackward();
-  motorBForward(); 
-  delay(duration);
-  motorAStop();
-  motorBStop();
-  delay(100);
-}
-
-void motorAForward(){
-  digitalWrite( MOTOR_A_DIR, HIGH );
-  digitalWrite( MOTOR_A_PWM, LOW );
-}
-
-void motorABackward(){
-  digitalWrite( MOTOR_A_DIR, LOW );
-  digitalWrite( MOTOR_A_PWM, HIGH );
-}
-
-void motorAStop(){
-  digitalWrite( MOTOR_A_DIR, LOW );
-  digitalWrite( MOTOR_A_PWM, LOW );
-}
-
-void motorBForward(){
-  digitalWrite( MOTOR_B_DIR, HIGH );
-  digitalWrite( MOTOR_B_PWM, LOW );
-}
-
-void motorBBackward(){
-  digitalWrite( MOTOR_B_DIR, LOW );
-  digitalWrite( MOTOR_B_PWM, HIGH );
-}
-
-void motorBStop(){
-  digitalWrite( MOTOR_B_DIR, LOW );
-  digitalWrite( MOTOR_B_PWM, LOW );
-}
-
-int redIndex = 0;
-int greenIndex = NUMPIXELS/3;
-int blueIndex = NUMPIXELS/3*2;
-
-void showBlinkenlightsFun()
-{
-  for ( int j = 0; j < NUMPIXELS; j++ ){
-    for ( int i = 0; i < NUMPIXELS; i++){
-      pixels.setPixelColor(i, pixels.Color(0,0,0,0)); // Moderately bright green color.
-    }
-  
-    pixels.setPixelColor(redIndex, pixels.Color(150,0,0,0)); // Moderately bright green color.
-    pixels.setPixelColor(greenIndex, pixels.Color(0,150,0,0)); // Moderately bright green color.
-    pixels.setPixelColor(blueIndex, pixels.Color(0,0,150,0)); // Moderately bright green color.
-    
-    redIndex = (redIndex + NUMPIXELS - 1)%NUMPIXELS;
-    greenIndex = (greenIndex + 1)%NUMPIXELS;
-    blueIndex = (blueIndex + 1)%NUMPIXELS;
-    pixels.show();
-    delay(100);
-  }
-
-  for ( int i = 0; i < NUMPIXELS; i++){
-    pixels.setPixelColor(i, pixels.Color(0,0,0,0)); // Moderately bright green color.
-  }
-  pixels.show();
-}
-
