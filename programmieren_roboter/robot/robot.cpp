@@ -31,8 +31,10 @@ void Robot::forward(int duration)
   motorAForward();
   motorBForward(); 
   delay(duration);
-  motorAStop();
   motorBStop();
+  // Motor A is slower
+  delay((int)(duration*0.074));
+  motorAStop();
   delay(100);
 }
 

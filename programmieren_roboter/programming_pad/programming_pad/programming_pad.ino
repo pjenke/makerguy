@@ -28,7 +28,7 @@ void setup() {
  * Arduino main loop.
  */
 void loop() { 
-  handleProgramStartButtonDebug();
+  handleProgramStartButton();
 }
 
 void initWifi(){
@@ -73,16 +73,24 @@ void printWifiStatus()
 /**
  * Handle the start button on the programming board
  */
-void handleProgramStartButtonDebug(){
+void handleProgramStartButton(){
   if ( digitalRead(BUTTON_PIN) == HIGH ){
-    /// TEST
+    programmingPad.printBoard();
+    programmingPad.assembleCurrentProgram();
+    programmingPad.printCurrentProgram(); 
+    String command = programmingPad.getCurrentCommand(); 
+    Serial.print("Command: ");
+    Serial.println(command);
+
+    // Send command to robot
     Serial.println();
     Serial.println("Starting connection to server...");
     // if you get a connection, report back via serial
     if (client.connect(server, port)) {
       Serial.println("Connected to server");
       // Make a HTTP request
-      client.println("GET /robot?command=BFLB HTTP/1.1");
+      String request = "GET /robot?command=" + command + " HTTP/1.1";
+      client.println(request);
       client.println("Host: robot");
       client.println("Connection: close");
       client.println();
@@ -90,19 +98,8 @@ void handleProgramStartButtonDebug(){
       client.flush();
       client.stop();
     }
-  }
-}
-
-/**
- * Handle the start button on the programming board
- */
-void handleProgramStartButton(){
-  if ( digitalRead(BUTTON_PIN) == HIGH ){
-    programmingPad.printBoard();
-    programmingPad.assembleCurrentProgram();
-    programmingPad.printCurrentProgram();  
+    
     Serial.println();
     delay(1000);
-    Serial.println("Press button to print board status ...");
   }
 }

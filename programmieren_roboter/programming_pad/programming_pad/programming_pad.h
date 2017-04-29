@@ -81,6 +81,15 @@ class ProgrammingPad {
      * Print the current program to the console.
      */
     void printCurrentProgram();
+
+    /**
+     * Returns the command string for the current board setup.
+     * B = Blink
+     * F = Forward
+     * L = Left
+     * R = Right
+     */
+    String getCurrentCommand();
 };
 
 #endif

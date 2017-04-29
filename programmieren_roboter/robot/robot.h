@@ -13,9 +13,9 @@
 #define MOTOR_A_PWM HG7881_A_IA // Motor B PWM Speed
 #define MOTOR_A_DIR HG7881_A_IB // Motor B Direction
 
-#define FORWARD_DURATION 1000 // Calibration!
-#define LEFT_DURATION 1000 // Calibration!
-#define RIGHT_DURATION 1000 // Calibration!
+#define FORWARD_DURATION 2100 // Calibration!
+#define LEFT_DURATION 1210 // Calibration!
+#define RIGHT_DURATION 1300 // Calibration!
 
 // Neopixels
 #define PIN 2

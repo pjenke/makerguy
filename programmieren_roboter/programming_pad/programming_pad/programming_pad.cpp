@@ -132,3 +132,19 @@ String ProgrammingPad::getStateName(int stateIndex){
   }
 }
 
+String ProgrammingPad::getCurrentCommand(){
+  String command = "";
+  for ( int i = 0; i < currentProgram.getSize(); i++ ){
+    int stateIndex = currentProgram.get(i);
+    if ( stateIndex == 0 ){
+      command += "F";
+    } else if ( stateIndex == 1 ){
+      command += "L";
+    } else if ( stateIndex == 2 ){
+      command += "R";
+    }
+  }
+  command += "B";
+  return command;
+}
+
