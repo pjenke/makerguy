@@ -1,2 +1,8 @@
 .DS_Store
 bin/
+.idea/
+.gradle/
+build/
+gradle/
+gradlew
+gradlew.bat
